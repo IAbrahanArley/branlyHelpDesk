@@ -5,20 +5,51 @@ import * as schema from "./schema";
 let _db: ReturnType<typeof drizzle> | null = null;
 let _client: ReturnType<typeof postgres> | null = null;
 
+function validateConnectionString(connectionString: string): void {
+  if (!connectionString) {
+    throw new Error("DATABASE_URL environment variable is not set");
+  }
+
+  if (!connectionString.startsWith("postgresql://") && !connectionString.startsWith("postgres://")) {
+    throw new Error(`DATABASE_URL must start with postgresql:// or postgres://. Found: ${connectionString.substring(0, 15)}...`);
+  }
+
+  try {
+    const url = new URL(connectionString);
+    
+    if (!url.hostname) {
+      throw new Error("DATABASE_URL is missing hostname");
+    }
+    
+    if (!url.username && !url.pathname.includes("@")) {
+      throw new Error("DATABASE_URL is missing username");
+    }
+    
+    if (!url.pathname || url.pathname === "/") {
+      throw new Error("DATABASE_URL is missing database name");
+    }
+  } catch (error) {
+    if (error instanceof TypeError && error.message.includes("Invalid URL")) {
+      throw new Error(`DATABASE_URL is not a valid URL. Please check the format. Example: postgresql://user:password@host:port/database`);
+    }
+    throw error;
+  }
+}
+
 function getDatabase() {
   if (!_db) {
-    const connectionString = process.env.DATABASE_URL;
+    const connectionString = process.env.DATABASE_URL?.trim();
 
-    if (!connectionString) {
-      throw new Error("DATABASE_URL environment variable is not set");
-    }
-
-    if (!connectionString.startsWith("postgresql://") && !connectionString.startsWith("postgres://")) {
-      throw new Error("DATABASE_URL must start with postgresql:// or postgres://");
+    try {
+      validateConnectionString(connectionString || "");
+    } catch (validationError) {
+      const errorMessage = validationError instanceof Error ? validationError.message : "Unknown validation error";
+      console.error("DATABASE_URL validation error:", errorMessage);
+      throw new Error(`Invalid DATABASE_URL: ${errorMessage}. Please check your environment variable configuration.`);
     }
 
     try {
-      _client = postgres(connectionString, { 
+      _client = postgres(connectionString!, { 
         max: 1,
         connect_timeout: 10,
         idle_timeout: 20,
@@ -27,8 +58,18 @@ function getDatabase() {
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Unknown error";
       console.error("Error creating database connection:", errorMessage);
-      console.error("Connection string format:", connectionString ? `${connectionString.substring(0, 20)}...` : "empty");
-      throw new Error(`Failed to create database connection: ${errorMessage}. Please check your DATABASE_URL environment variable.`);
+      
+      const urlPreview = connectionString ? (() => {
+        try {
+          const url = new URL(connectionString);
+          return `postgresql://${url.username ? url.username + '@' : ''}${url.hostname}${url.port ? ':' + url.port : ''}${url.pathname}`;
+        } catch {
+          return connectionString.substring(0, 50) + '...';
+        }
+      })() : "empty";
+      
+      console.error("Connection string preview:", urlPreview);
+      throw new Error(`Failed to create database connection: ${errorMessage}. Please verify your DATABASE_URL format and credentials.`);
     }
   }
 

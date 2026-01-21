@@ -47,12 +47,20 @@ export async function middleware(request: NextRequest) {
       } = await supabase.auth.getUser();
 
       if (error) {
-        console.error("Error getting user from Supabase:", error);
+        if (error.message.includes("Auth session missing") || error.message.includes("session")) {
+          user = null;
+        } else {
+          console.error("Error getting user from Supabase:", error);
+        }
       } else {
         user = authUser;
       }
     } catch (error) {
-      console.error("Error in middleware auth check:", error);
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      if (!errorMessage.includes("session") && !errorMessage.includes("Auth session missing")) {
+        console.error("Error in middleware auth check:", error);
+      }
+      user = null;
     }
 
     if (

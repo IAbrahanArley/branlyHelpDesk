@@ -6,13 +6,15 @@ import { LoginForm } from "./login-form";
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: { message?: string };
+  searchParams: Promise<{ message?: string }>;
 }) {
   const user = await getCurrentUser();
 
   if (user) {
     redirect("/dashboard");
   }
+
+  const resolvedSearchParams = await searchParams;
 
   return (
     <div className="flex min-h-screen items-center justify-center p-4">
@@ -24,9 +26,9 @@ export default async function LoginPage({
           </p>
         </div>
 
-        {searchParams.message && (
+        {resolvedSearchParams.message && (
           <div className="rounded-md bg-blue-50 border border-blue-200 p-4 text-blue-800 text-sm">
-            {searchParams.message}
+            {resolvedSearchParams.message}
           </div>
         )}
 

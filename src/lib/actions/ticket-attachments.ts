@@ -55,10 +55,10 @@ export async function uploadTicketAttachmentAction(
   try {
     const uploadResult = await uploadFileToStorage(file, ticketId, messageId);
 
-    if (uploadResult.error) {
+    if (uploadResult.error || !uploadResult.url) {
       return {
         success: false,
-        error: uploadResult.error,
+        error: uploadResult.error || "Erro ao fazer upload do arquivo",
       };
     }
 

@@ -44,7 +44,7 @@ const priorityColors = {
 export default async function TicketDetailPage({
   params,
 }: {
-  params: Promise<{ id: string }> | { id: string };
+  params: Promise<{ id: string }>;
 }) {
   const user = await getCurrentUser();
 
@@ -52,7 +52,7 @@ export default async function TicketDetailPage({
     redirect("/login");
   }
 
-  const resolvedParams = await Promise.resolve(params);
+  const resolvedParams = await params;
   
   if (!resolvedParams.id) {
     notFound();

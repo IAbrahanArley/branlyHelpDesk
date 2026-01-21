@@ -49,10 +49,19 @@ function getDatabase() {
     }
 
     try {
+      const url = new URL(connectionString!);
+      const isDirectConnection = url.port === "5432" || (!url.port && url.hostname.includes("db."));
+      
+      if (isDirectConnection && process.env.NODE_ENV === "production") {
+        console.warn("⚠️  Using direct database connection (port 5432) in production. Consider using Connection Pooling (port 6543) for better performance and reliability.");
+      }
+
       _client = postgres(connectionString!, { 
         max: 1,
-        connect_timeout: 10,
+        connect_timeout: 30,
         idle_timeout: 20,
+        max_lifetime: 60 * 30,
+        onnotice: () => {},
       });
       _db = drizzle(_client, { schema });
     } catch (error) {

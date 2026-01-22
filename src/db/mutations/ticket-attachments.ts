@@ -21,3 +21,4 @@ export async function createTicketAttachment(data: {
 
   return attachment;
 }
+

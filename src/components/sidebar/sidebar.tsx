@@ -112,3 +112,4 @@ export function Sidebar({ userRole }: SidebarProps) {
     </div>
   );
 }
+

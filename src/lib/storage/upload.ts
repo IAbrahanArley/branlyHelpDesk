@@ -73,3 +73,4 @@ export async function deleteFileFromStorage(filePath: string): Promise<void> {
   const supabase = await createClient();
   await supabase.storage.from("ticket-attachments").remove([filePath]);
 }
+

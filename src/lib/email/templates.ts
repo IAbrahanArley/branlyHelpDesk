@@ -232,3 +232,4 @@ export function getNewTicketEmail({
 
   return { subject, html };
 }
+

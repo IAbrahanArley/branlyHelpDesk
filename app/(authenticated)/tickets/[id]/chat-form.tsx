@@ -127,3 +127,4 @@ export function ChatForm({ ticketId }: ChatFormProps) {
     </Card>
   );
 }
+

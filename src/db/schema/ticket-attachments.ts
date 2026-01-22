@@ -29,3 +29,4 @@ export const ticketAttachmentsRelations = relations(
 
 export type TicketAttachment = typeof ticketAttachments.$inferSelect;
 export type NewTicketAttachment = typeof ticketAttachments.$inferInsert;
+

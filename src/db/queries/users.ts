@@ -13,3 +13,4 @@ export async function getAllAdmins() {
 export async function getAllUsers() {
   return await db.select().from(users);
 }
+

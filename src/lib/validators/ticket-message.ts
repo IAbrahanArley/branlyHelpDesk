@@ -9,3 +9,4 @@ export const createTicketMessageSchema = z.object({
 });
 
 export type CreateTicketMessageInput = z.infer<typeof createTicketMessageSchema>;
+

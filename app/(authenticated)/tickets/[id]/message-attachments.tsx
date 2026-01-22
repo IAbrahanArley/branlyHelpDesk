@@ -60,3 +60,4 @@ export function MessageAttachments({ attachments }: MessageAttachmentsProps) {
     </div>
   );
 }
+

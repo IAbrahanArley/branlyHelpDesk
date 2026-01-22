@@ -37,3 +37,4 @@ export const ticketMessagesRelations = relations(
 
 export type TicketMessage = typeof ticketMessages.$inferSelect;
 export type NewTicketMessage = typeof ticketMessages.$inferInsert;
+

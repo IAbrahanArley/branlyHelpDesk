@@ -62,8 +62,9 @@ export function Sidebar({ userRole }: SidebarProps) {
       )}
       <aside
         className={cn(
-          "fixed left-0 top-0 z-50 flex h-full flex-col border-r bg-card transition-all duration-300 lg:relative",
-          isOpen ? "translate-x-0 w-64" : "-translate-x-full lg:translate-x-0 lg:w-16"
+          "fixed left-0 top-0 z-50 flex h-full flex-col border-r bg-background transition-all duration-300 lg:relative lg:bg-card",
+          isOpen ? "translate-x-0 w-64" : "-translate-x-full lg:translate-x-0 lg:w-16",
+          "shadow-lg lg:shadow-none"
         )}
       >
         <div className="flex h-16 items-center justify-between border-b px-6">

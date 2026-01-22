@@ -4,23 +4,28 @@ import { users } from "@/src/db/schema";
 import { eq } from "drizzle-orm";
 
 export async function getCurrentUser() {
-  const supabase = await createClient();
+  try {
+    const supabase = await createClient();
 
-  const {
-    data: { user: authUser },
-  } = await supabase.auth.getUser();
+    const {
+      data: { user: authUser },
+      error,
+    } = await supabase.auth.getUser();
 
-  if (!authUser) {
+    if (error || !authUser) {
+      return null;
+    }
+
+    const [user] = await db
+      .select()
+      .from(users)
+      .where(eq(users.supabaseUserId, authUser.id))
+      .limit(1);
+
+    return user || null;
+  } catch (error) {
     return null;
   }
-
-  const [user] = await db
-    .select()
-    .from(users)
-    .where(eq(users.supabaseUserId, authUser.id))
-    .limit(1);
-
-  return user || null;
 }
 
 export async function requireAuth() {

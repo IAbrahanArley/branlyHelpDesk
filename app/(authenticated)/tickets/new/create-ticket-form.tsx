@@ -76,13 +76,26 @@ export function CreateTicketForm() {
 
         if (result?.error) {
           setError(result.error);
+        } else {
+          router.push(`/tickets`);
         }
       } catch (err) {
-        setError(
+        const errorMessage =
           err instanceof Error
             ? err.message
-            : "Erro inesperado ao criar ticket. Tente novamente."
-        );
+            : "Erro inesperado ao criar ticket. Tente novamente.";
+
+        if (
+          err &&
+          typeof err === "object" &&
+          "digest" in err &&
+          typeof err.digest === "string" &&
+          err.digest.includes("NEXT_REDIRECT")
+        ) {
+          return;
+        }
+
+        setError(errorMessage);
       }
     });
   };

@@ -48,17 +48,17 @@ export default async function TicketsPage() {
   const tickets = await getTicketsByUserId(user.id);
 
   return (
-    <div className="p-8">
+    <div className="p-4 sm:p-6 lg:p-8">
       <div className="mx-auto max-w-7xl">
-        <div className="mb-8 flex items-center justify-between">
+        <div className="mb-6 sm:mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold">Meus Tickets</h1>
-            <p className="mt-2 text-muted-foreground">
+            <h1 className="text-2xl sm:text-3xl font-bold">Meus Tickets</h1>
+            <p className="mt-1 sm:mt-2 text-sm sm:text-base text-muted-foreground">
               Visualize e gerencie seus chamados
             </p>
           </div>
-          <Link href="/tickets/new">
-            <Button>Novo Ticket</Button>
+          <Link href="/tickets/new" className="w-full sm:w-auto">
+            <Button className="w-full sm:w-auto">Novo Ticket</Button>
           </Link>
         </div>
 
@@ -80,8 +80,8 @@ export default async function TicketsPage() {
                 <Card className="hover:shadow-md transition-shadow cursor-pointer">
                   <CardHeader>
                     <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <CardTitle className="text-lg mb-2">
+                      <div className="flex-1 min-w-0">
+                        <CardTitle className="text-base sm:text-lg mb-2 break-words">
                           {ticket.title}
                         </CardTitle>
                         <p className="text-sm text-muted-foreground line-clamp-2">
@@ -91,30 +91,30 @@ export default async function TicketsPage() {
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-4">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
+                      <div className="flex flex-wrap items-center gap-2 sm:gap-4">
                         <span
-                          className={`px-2 py-1 rounded-full text-xs font-medium ${statusColors[ticket.status as TicketStatus]}`}
+                          className={`px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap ${statusColors[ticket.status as TicketStatus]}`}
                         >
                           {statusLabels[ticket.status as TicketStatus]}
                         </span>
                         <span
-                          className={`px-2 py-1 rounded-full text-xs font-medium ${priorityColors[ticket.priority as TicketPriority]}`}
+                          className={`px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap ${priorityColors[ticket.priority as TicketPriority]}`}
                         >
                           {priorityLabels[ticket.priority as TicketPriority]}
                         </span>
-                        <span className="text-sm text-muted-foreground">
+                        <span className="text-xs sm:text-sm text-muted-foreground whitespace-nowrap">
                           #{ticket.ticketNumber}
                         </span>
                       </div>
-                      <div className="text-sm text-muted-foreground">
+                      <div className="text-xs sm:text-sm text-muted-foreground whitespace-nowrap">
                         {format(new Date(ticket.createdAt), "dd/MM/yyyy", {
                           locale: ptBR,
                         })}
                       </div>
                     </div>
                     {assignedAdmin && (
-                      <div className="mt-2 text-sm text-muted-foreground">
+                      <div className="mt-2 text-xs sm:text-sm text-muted-foreground">
                         Atribuído a: {assignedAdmin.name}
                       </div>
                     )}

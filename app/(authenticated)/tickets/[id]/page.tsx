@@ -69,36 +69,36 @@ export default async function TicketDetailPage({
   }
 
   return (
-    <div className="p-8">
+    <div className="p-4 sm:p-6 lg:p-8">
       <div className="mx-auto max-w-5xl">
-        <div className="mb-8 flex items-center justify-between">
-          <div>
+        <div className="mb-6 sm:mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex-1 min-w-0">
             <Link
               href="/tickets"
-              className="text-sm text-muted-foreground hover:text-foreground mb-2 inline-block"
+              className="text-xs sm:text-sm text-muted-foreground hover:text-foreground mb-2 inline-block"
             >
               ← Voltar para tickets
             </Link>
-            <h1 className="text-3xl font-bold">{ticket.title}</h1>
-            <p className="mt-2 text-sm text-muted-foreground">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold break-words">{ticket.title}</h1>
+            <p className="mt-1 sm:mt-2 text-xs sm:text-sm text-muted-foreground">
               Ticket #{ticket.ticketNumber}
             </p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <span
-              className={`px-3 py-1 rounded-full text-sm font-medium ${statusColors[ticket.status as TicketStatus]}`}
+              className={`px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium whitespace-nowrap ${statusColors[ticket.status as TicketStatus]}`}
             >
               {statusLabels[ticket.status as TicketStatus]}
             </span>
             <span
-              className={`px-3 py-1 rounded-full text-sm font-medium ${priorityColors[ticket.priority as TicketPriority]}`}
+              className={`px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium whitespace-nowrap ${priorityColors[ticket.priority as TicketPriority]}`}
             >
               {priorityLabels[ticket.priority as TicketPriority]}
             </span>
           </div>
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-3">
+        <div className="grid gap-4 sm:gap-6 lg:grid-cols-3">
           <div className="lg:col-span-2 space-y-6">
             <Card>
               <CardHeader>
@@ -121,14 +121,14 @@ export default async function TicketDetailPage({
                     {ticket.messages.map((message) => {
                         const isCurrentUser = (message as any).user?.id === user.id;
                         return (
-                          <div
+                              <div
                             key={message.id}
                             className={`pb-4 last:pb-0 ${
                               isCurrentUser ? "text-right" : "text-left"
                             }`}
                           >
                             <div
-                              className={`inline-block max-w-[80%] rounded-lg p-4 ${
+                              className={`inline-block max-w-[85%] sm:max-w-[80%] rounded-lg p-3 sm:p-4 ${
                                 isCurrentUser
                                   ? "bg-primary text-primary-foreground"
                                   : "bg-muted"
